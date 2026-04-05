@@ -12,109 +12,27 @@
 
 <!-- Header trên đầu -->
 <body>
+    <div    class="container">
     <header class="navbar">
         <div class="title-container">
-            <h1>HUST CALCULATOR</h1>
+            <h1>CÔNG CỤ TÍNH TOÁN ARRAY FACTOR</h1>
         </div>
         <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/e/ef/Logo_%C4%90%E1%BA%A1i_h%E1%BB%8Dc_B%C3%A1ch_Khoa_H%C3%A0_N%E1%BB%99i.svg/960px-Logo_%C4%90%E1%BA%A1i_h%E1%BB%8Dc_B%C3%A1ch_Khoa_H%C3%A0_N%E1%BB%99i.svg.png" alt="Logo HUST">
+            <img src="icon.png" alt="Logo HUST">
         </div>
     </header>
 
-<!-- Tab change button -->
-    <div class="container">
-        <div class="tab-menu">
-            <button class="tab-btn active" onclick="openTab(event, 'tab1')">
-                LOS
-            </button>
-            <button class="tab-btn" onclick="openTab(event, 'tab2')">
-                Array Factor
-            </button>
-        </div>
-
-<!-- tab 1 -->    
-        <div id="tab1" class="tab-content active">
-<!-- giới thiệu tab 1 -->
-            <div class="tool-intro">
-                <h2>Công cụ tính toán Tầm nhìn thẳng (LOS)</h2>
-                <p>Hỗ trợ thiết kế đường truyền sóng vô tuyến: tính toán khoảng cách giới hạn do độ cong Trái Đất, đánh giá suy hao không gian tự do (FSPL) và xác định vùng an toàn Fresnel để tránh nhiễu xạ tín hiệu.</p>
-            </div>
-<!-- lý thuyết -->   
-            <div class="theory-box">
-                <h5> Tầm nhìn quang học</h5>
-                <p>Đối với đường truyền vô tuyến, khoảng cách LOS tối đa (\( d_{LOS} \)) được xác định bởi độ cao của trạm phát (h₁) và trạm thu (h₂) theo công thức:</p>
-                $$ d_{LOS} = 3.57 \times (\sqrt{h_1} + \sqrt{h_2}) $$
-                <p>Trong đó: \( d_{LOS} \) là khoảng cách LOS tối đa (km), h₁ và h₂ là độ cao của trạm phát và trạm thu (m).</p>
-                <img class="theory-img" src="https://www.rfwireless-world.com/_astro/Line-of-sight-wave-propagation.CKbiTyCs.jpg" alt="Minh họa">
-
-                <h4> Tầm nhìn Vô tuyến & Hiện tượng Khúc xạ </h4>
-                <p>Khác với ánh sáng nhìn thấy, sóng vô tuyến khi truyền qua tầng đối lưu sẽ bị khúc xạ và uốn cong nhẹ ôm theo bề mặt Trái Đất. Nhờ hiện tượng này, tầm nhìn vô tuyến thường vươn xa hơn khoảng 15% so với tầm nhìn quang học.</p>
-                <p>Khoảng cách LOS tối đã lúc này được tính bằng công thức:</p>
-                $$ d_{Radio} = 4.12 \times (\sqrt{h_1} + \sqrt{h_2}) $$
-                <p>Trong đó: (\( d_{Radio} \)) là khoảng cách LOS tối đa (km), h₁ và h₂ là độ cao của trạm phát và trạm thu (m).</p>
-                <img class="theory-img" src="https://storage.googleapis.com/tb-img/production/20/08/F1_S.B_Madhu_29.07.20_D6.png" alt="Minh họa">
-
-                <h4> Vùng Fresnel & Nhiễu xạ </h4>
-                <p>Để đảm bảo tín hiệu không bị nhiễu xạ, đường truyền cần được giải phóng chướng ngại vật trong Bán kính miền Fresnel thứ nhất (R1).</p>
-                $$ R1 = 17.32 \times \sqrt{\frac{d_1 \times d_2}{f \times d}} $$
-                <p>Trong đó: d₁ và d₂ là khoảng cách từ chướng ngại vật đến trạm phát và trạm thu (km), f là tần số (MHz), d là khoảng cách giữa hai trạm (km).</p>
-                <img class="theory-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjyIQoGEZGZuBIkfrnUAl4Y7suVJMv3kQw02XUz8UloihHP4ia41xleOqUGEtFH2HXekqmd8mNYgV55oPCidTvjblDY0RTbnKntRdxcX1z1UFvat00AFgYpQY6-YoaiZuRCb48886H9jBI/s1600/500px-FresnelSVG1.svg.png" alt="Minh họa">
-                
-                <h5> Suy hao không gian tự do (FSPL) </h5>
-                <p>FSPL biểu thị mức suy hao tín hiệu khi sóng vô tuyến lan truyền trong không gian tự do, không bị ảnh hưởng bởi chướng ngại vật hay hiện tượng khúc xạ. Công thức tính FSPL là:</p>
-                $$ FSPL (dB) = 20 \log_{10}(d) + 20 \log_{10}(f) + 32.44 $$
-                <p>Trong đó: d là khoảng cách giữa hai trạm (km), f là tần số (MHz).</p>
-                <img class="theory-img" src="https://cdn.emc-directory.com/calculator/1655067930948_637906647324992024.png" alt="Minh họa">
-            </div>
-
-<!-- Nhập số liệu -->
-            <div class="calculator-box">
-                <h3>Thông số Đường truyền</h3>
-                
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label>Tần số (f) - MHz:</label>
-                            <input type="number" id="losFreq" value="2400" oninput="syncLOS('losFreqSlider', this.value)">
-                    </div>
-                    <div class="input-group">
-                        <label>Khoảng cách (d) - km:</label>
-                            <input type="number" id="losDist" value="10" oninput="syncLOS('losDistSlider', this.value)">
-                    </div>
-                    <div class="input-group">
-                        <label>Cao độ Trạm phát (h₁) - m:</label>
-                            <input type="number" id="losH1" value="30" oninput="syncLOS('losH1Slider', this.value)">
-                    </div>
-                    <div class="input-group">
-                        <label>Cao độ Trạm thu (h₂) - m:</label>
-                            <input type="number" id="losH2" value="10" oninput="syncLOS('losH2Slider', this.value)">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="calc-btn btn-array" onclick="calculateLOS()">Tính toán</button>
-                </div>
-
-<!-- Trả kết quả -->
-                <div class="result-area">
-                    <p>Khoảng cách LOS vô tuyến tối đa: <strong id="resMaxDist" style="color: var(--hust-red);">-</strong> <strong>km</strong></p>
-                    <p>Suy hao không gian tự do (FSPL): <strong id="resFSPL">-</strong> <strong>dB</strong></p>
-                    <p>Bán kính miền Fresnel 1 lớn nhất: <strong id="resFresnel" style="color: #2980b9;">-</strong> <strong>m</strong></p>
-                </div>
-            </div>
-        </div>
-
 <!-- tab 2 -->
-        <div id="tab2" class="tab-content">
+        <div id="tab2" class="tab-content active">
 <!-- giới thiệu tab 2 -->
             <div class="tool-intro">
-                <h2>Tính toán Array Factor</h2>
-                <p>Khảo sát đặc đồ bức xạ không gian của các mảng anten quy mô lớn. Tùy chọn mô hình linear hoặc planar.</p>
+                <p style="color: #666; font-size: 20px;">Khảo sát đặc đồ bức xạ không gian của các mảng anten quy mô lớn. Tùy chọn mô hình linear hoặc planar.</p>
             </div>
 
 <!-- sub tabs -->
             <div class="sub-tab-menu">
-                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Mảng Tuyến Tính (1D Linear)</button>
-                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Mảng Phẳng (2D Planar)</button>
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Mảng Tuyến Tính (Linear)</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Mảng Phẳng (Planar)</button>
             </div>
 
 <!-- tab linear-->
@@ -129,6 +47,7 @@
                     <p>Trong đó, Ψ là tổng độ lệch pha giữa hai phần tử liên tiếp, phụ thuộc vào góc quan sát θ và góc kích thích pha điện tử α (dùng để bẻ tia - Beam steering):</p>
                     
                     $$ \psi = \frac{2\pi}{\lambda} d \cos(\theta) + \alpha $$
+                    
 
                     <img class="theory-img" src="linear.png" alt="Minh họa">
                 </div>
@@ -156,16 +75,20 @@
                     </div>
 <!-- Button -->
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="calc-btn btn-array" onclick="calculateAF()">Vẽ đồ thị Linear 1D</button>
+                        <button class="calc-btn btn-array" onclick="calculateAF()">Tính toán và vẽ đồ thị</button>
                         <button class="calc-btn btn-export" onclick="exportCSV()">Xuất dữ liệu (CSV)</button>
                     </div>
 <!-- Trả kết quả -->
                     <div class="result-area" style="margin-top: 20px;">
                         <p>Giá trị Array Factor chuẩn hóa tại θ = <span id="displayTheta">90</span>°: <strong id="afResult">-</strong></p>
-                        <div class="charts-container" style="margin-top: 20px;">
+                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Hệ số hướng tính (Directivity): <strong id="ulaDirectivity">-</strong></p>
+                        <p style="color: #e67e22; margin-top: 8px;">Độ rộng búp sóng nửa công suất (HPBW): <strong id="ulaHPBW">-</strong></p>
+                        <p style="color: #c0392b; margin-top: 5px;">Độ rộng búp sóng giữa 2 điểm không (FNBW): <strong id="ulaFNBW">-</strong></p>
+                    </div>
+                    <div class="charts-container" style="margin-top: 20px;">
+                            <div id="plotCartesian" style="width: 100%; height: 500px; margin-bottom: 40px; border: 1px solid #eee; border-radius: 8px;"></div>
                             <div id="plot2d" style="width: 100%; height: 400px; margin-bottom: 20px;"></div>
                             <div id="plot3d" style="width: 100%; height: 500px;"></div>
-                        </div>
                     </div>
 <!-- Đồ thị -->
                 </div>
@@ -227,12 +150,26 @@
                     </div>
 <!-- Button -->
                     <div style="display: flex; gap: 10px; margin-top: 15px;"></div>                    
-                        <button class="calc-btn btn-array" onclick="calculatePlanarAF()">Tính AF và Vẽ đồ thị Planar 3D</button>
+                        <button class="calc-btn btn-array" onclick="calculatePlanarAF()">Tính toán và vẽ đồ thị</button>
                     </div>
 <!-- Đồ thị -->
                     <div class="result-area" style="margin-top: 20px;">
                         <p>Giá trị AF chuẩn hóa tại (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°): <strong id="afPlanarResult" style="color: #BF1E2D;">-</strong></p>
+                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Hệ số hướng tính (Directivity cực đại): <strong id="upaDirectivity">-</strong></p>
+                        <div style="display: flex; gap: 40px; margin-top: 10px; font-size: 14px;">
+                            <div>
+                                <strong style="color: #27ae60;">Mặt phẳng X-Z (Phi = 0°):</strong>
+                                <p style="margin: 5px 0;">HPBW_x ~ <strong id="upaHPBWx">-</strong></p>
+                                <p style="margin: 5px 0;">FNBW_x ~ <strong id="upaFNBWx">-</strong></p>
+                            </div>
+                            <div>
+                                <strong style="color: #8e44ad;">Mặt phẳng Y-Z (Phi = 90°):</strong>
+                                <p style="margin: 5px 0;">HPBW_y ~ <strong id="upaHPBWy">-</strong></p>
+                                <p style="margin: 5px 0;">FNBW_y ~ <strong id="upaFNBWy">-</strong></p>
+                            </div>
+                        </div>
                     <div class="charts-container" style="margin-top: 20px;">
+                        <div id="plotPlanar2D" style="width: 100%; height: 500px; margin-bottom: 40px; border: 1px solid #eee; border-radius: 8px;"></div>
                         <div id="plotPlanar3D" style="width: 100%; height: 600px; border: 1px solid #eee; border-radius: 8px;"></div>
                     </div>
                 </div>
@@ -250,7 +187,7 @@
             <p class="footer-subtext">Khoa Điện tử Viễn thông - Đại học Bách Khoa Hà Nội</p>
             <div class="footer-links">
                 <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank"> Báo cáo đồ án</a> | 
-                <a href="https://github.com/bitoi/anten-cal.git" target="_blank"> GitHub Repository</a>
+                <a href="https://github.com/bitoi/anten-cal" target="_blank"> GitHub Repository</a>
             </div>
         </div>
     </footer>

@@ -1,56 +1,4 @@
-// ĐIỀU HƯỚNG TAB
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    
-    // Ẩn tất cả nội dung tab
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-        tabcontent[i].classList.remove("active");
-    }
-    
-    // Xóa class active của tất cả các nút
-    tablinks = document.getElementsByClassName("tab-btn");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    
-    // Hiện tab được chọn và thêm class active
-    document.getElementById(tabName).style.display = "block";
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.className += " active";
-}
-// TAB 1: TÍNH TOÁN LOS VÀ FRESNEL
 
-// Hàm đồng bộ giá trị giữa Slider và Ô nhập số
-
-function calculateLOS() {
-    const f = parseFloat(document.getElementById('losFreq').value); // MHz
-    const d = parseFloat(document.getElementById('losDist').value); // km
-    const h1 = parseFloat(document.getElementById('losH1').value);  // m
-    const h2 = parseFloat(document.getElementById('losH2').value);  // m
-
-    // 1. Khoảng cách Radio LOS tối đa (k = 4/3)
-    if (h1 >= 0 && h2 >= 0) {
-        const maxDist = 4.12 * (Math.sqrt(h1) + Math.sqrt(h2));
-        document.getElementById('resMaxDist').innerText = maxDist.toFixed(2);
-    } else {
-        document.getElementById('resMaxDist').innerText = "Lỗi";
-    }
-
-    // 2. Suy hao FSPL và Bán kính Fresnel
-    if (f > 0 && d > 0) {
-        const fspl = 32.44 + 20 * Math.log10(d) + 20 * Math.log10(f);
-        document.getElementById('resFSPL').innerText = fspl.toFixed(2);
-
-        const f_GHz = f / 1000;
-        const fresnel = 8.66 * Math.sqrt(d / f_GHz);
-        document.getElementById('resFresnel').innerText = fresnel.toFixed(2);
-    } else {
-        document.getElementById('resFSPL').innerText = "Lỗi";
-        document.getElementById('resFresnel').innerText = "Lỗi";
-    }
-}
 
 // ==========================================
 // TAB 2: TÍNH TOÁN ARRAY FACTOR (AF)
@@ -83,6 +31,12 @@ function calculateAF() {
     // Hiển thị kết quả tại góc quan sát chỉ định
     const targetTheta = parseInt(document.getElementById('thetaDeg').value);
     document.getElementById('displayTheta').innerText = targetTheta;
+    let bw = extractBeamwidths(N, d_lambda, alphaRad);
+    document.getElementById('ulaHPBW').innerText = bw.hpbw + "°";
+    document.getElementById('ulaFNBW').innerText = bw.fnbw + "°";
+    let directivity_linear = 2 * N * d_lambda; 
+    let directivity_linear_dBi = 10 * Math.log10(directivity_linear);
+    document.getElementById('ulaDirectivity').innerText = directivity_linear.toFixed(2) + " (lần) ~ " + directivity_linear_dBi.toFixed(2) + " dBi";
     
     if(targetTheta >= 0 && targetTheta <= 180) {
         document.getElementById('afResult').innerText = afDataForExport[targetTheta].af.toFixed(4);
@@ -90,9 +44,10 @@ function calculateAF() {
         document.getElementById('afResult').innerText = "Góc ngoài vùng (0-180)";
     }
 
-    // Vẽ 2 đồ thị
+    // Vẽ đồ thị
+    drawCartesianChart();
     drawPolarChart(N, d_lambda, alphaRad);
-    draw3DChart(N, d_lambda, alphaRad);
+    draw3DChart(N, d_lambda, alphaRad); 
 }
 
 // --- VẼ ĐỒ THỊ 2D POLAR (Thang dB) ---
@@ -198,7 +153,7 @@ function exportCSV() {
     }
 
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Góc Theta (Độ),Array Factor (Chuẩn hóa)\n";
+    csvContent += "Goc Theta (Deg),Array Factor\n";
 
     afDataForExport.forEach(function(row) {
         csvContent += row.theta + "," + row.af.toFixed(6) + "\n";
@@ -216,11 +171,7 @@ function exportCSV() {
 // ==========================================
 // KHỞI CHẠY KHI MỞ TRANG
 // ==========================================
-window.onload = function() {
-    calculateLOS(); // Tính Tab 1
-    calculateAF();  // Tính và vẽ Tab 2 luôn cho đẹp
-    calculatePlanarAF(); // Planar
-};
+
 
 // Xử lý Responsive cho các đồ thị Plotly
 window.addEventListener('resize', function() {
@@ -229,6 +180,7 @@ window.addEventListener('resize', function() {
     
     if (plot2d && plot2d.innerHTML !== "") Plotly.Plots.resize(plot2d);
     if (plot3d && plot3d.innerHTML !== "") Plotly.Plots.resize(plot3d);
+    if (document.getElementById('plotCartesian').innerHTML !== "") Plotly.Plots.resize('plotCartesian');
 });
 // Hàm chuyển đổi Tab con (Sub-tabs)
 function openSubTab(evt, tabName) {
@@ -251,7 +203,9 @@ function openSubTab(evt, tabName) {
         if (plot2d && plot2d.innerHTML !== "") Plotly.Plots.resize(plot2d);
         if (plot3d && plot3d.innerHTML !== "") Plotly.Plots.resize(plot3d);
     } else if (tabName === 'sub-planar') {
+        const plotPlanar2D = document.getElementById('plotPlanar2D');
         const plotPlanar3D = document.getElementById('plotPlanar3D');
+        if (plotPlanar3D && plotPlanar3D.innerHTML !== "") Plotly.Plots.resize(plotPlanar3D);
         if (plotPlanar3D && plotPlanar3D.innerHTML !== "") Plotly.Plots.resize(plotPlanar3D);
     }
 }
@@ -297,13 +251,13 @@ function calculatePlanarAF() {
         y_vals.push(y_row);
         z_vals.push(z_row);
     }
-// --- THÊM VÀO HÀM calculatePlanarAF() ---
     // Tính và hiển thị giá trị AF tại góc chỉ định
     const targetThetaDeg = parseFloat(document.getElementById('thetaPlanar').value);
     const targetPhiDeg = parseFloat(document.getElementById('phiPlanar').value);
     
     document.getElementById('dispThetaPlanar').innerText = targetThetaDeg;
     document.getElementById('dispPhiPlanar').innerText = targetPhiDeg;
+    
 
     if (targetThetaDeg >= 0 && targetThetaDeg <= 180 && targetPhiDeg >= 0 && targetPhiDeg <= 360) {
         const targetThetaRad = (targetThetaDeg * Math.PI) / 180;
@@ -320,6 +274,21 @@ function calculatePlanarAF() {
     } else {
         document.getElementById('afPlanarResult').innerText = "Lỗi góc";
     }
+    let hpbw_x = 50.8 / (Nx * dx);
+    let fnbw_x = 114.6 / (Nx * dx);
+    let hpbw_y = 50.8 / (Ny * dy);
+    let fnbw_y = 114.6 / (Ny * dy);
+
+    document.getElementById('upaHPBWx').innerText = hpbw_x.toFixed(2) + "°";
+    document.getElementById('upaFNBWx').innerText = fnbw_x.toFixed(2) + "°";
+    document.getElementById('upaHPBWy').innerText = hpbw_y.toFixed(2) + "°";
+    document.getElementById('upaFNBWy').innerText = fnbw_y.toFixed(2) + "°";
+    // Tính Directivity cho Planar Array: D = 4π * (Aperture hiệu dụng) / (λ^2), với Aperture hiệu dụng xấp xỉ bằng diện tích mảng (Nx*dx)*(Ny*dy)
+    let directivity_planar = 4 * Math.PI * (Nx * dx) * (Ny * dy);
+    let directivity_planar_dBi = 10 * Math.log10(directivity_planar);
+    document.getElementById('upaDirectivity').innerText = directivity_planar.toFixed(2) + " (lần) ~ " + directivity_planar_dBi.toFixed(2) + " dBi";
+
+    drawPlanarContour(Nx, Ny, dx, dy, betaXRad, betaYRad);
     // ----------------------------------------
     // Cấu hình vẽ 3D Plotly cho Planar
     const data = [{
@@ -342,3 +311,156 @@ function calculatePlanarAF() {
     Plotly.newPlot('plotPlanar3D', data, layout);
     
 }
+// --- VẼ ĐỒ THỊ CARTESIAN (Thang dB - Trục X là góc) ---
+// --- VẼ ĐỒ THỊ CARTESIAN (Thang dB - Lấy dữ liệu trực tiếp) ---
+function drawCartesianChart() {
+    let x_vals = [];
+    let y_vals = [];
+
+    // Duyệt qua mảng dữ liệu đã được tính chuẩn xác ở hàm calculateAF()
+    for (let i = 0; i < afDataForExport.length; i++) {
+        let theta = afDataForExport[i].theta;
+        let af = afDataForExport[i].af;
+
+        // Dịch trục tọa độ: Đỉnh 90 độ của hệ cầu sẽ về mốc 0 của trục X đồ thị
+        let plotAngle = theta - 90;
+        x_vals.push(plotAngle);
+
+        // Đổi biên độ sang thang đo logarit (dB)
+        let af_db = 20 * Math.log10(af);
+
+        // Bọc bảo hiểm: Ép các giá trị lỗi hoặc quá sâu về mốc sàn -40dB
+        if (!isFinite(af_db) || isNaN(af_db) || af_db < -40) {
+            af_db = -40;
+        }
+
+        y_vals.push(af_db);
+    }
+
+    const data = [{
+        x: x_vals,
+        y: y_vals,
+        mode: 'lines',
+        line: { color: 'blue', width: 2 },
+        type: 'scatter'
+    }];
+
+    const layout = {
+        title: { text: 'Antenna Array Radiation Pattern (Cartesian)', font: { size: 16 } },
+        xaxis: { 
+            title: 'Angle (Deg)', 
+            range: [-90, 90], // Khóa cứng trục X từ -90 đến 90
+            dtick: 30,
+            gridcolor: '#e2e2e2'
+        },
+        yaxis: { 
+            title: 'Normalized Power (dB)', 
+            range: [-40, 0],  // Khóa cứng trục Y từ -40 đến 0
+            dtick: 10,
+            gridcolor: '#e2e2e2'
+        },
+        margin: { l: 60, r: 30, b: 60, t: 60 },
+        plot_bgcolor: 'white',
+        paper_bgcolor: 'white',
+        showlegend: false
+    };
+
+    Plotly.newPlot('plotCartesian', data, layout);
+}
+// --- VẼ ĐỒ THỊ 2D CONTOUR CHO PLANAR ARRAY (Thang dB) ---
+function drawPlanarContour(Nx, Ny, dx, dy, betaXRad, betaYRad) {
+    let phi_vals = [];   // Trục X
+    let theta_vals = []; // Trục Y
+    let z_vals = [];     // Màu sắc (Độ lớn dB)
+
+    // Tạo mảng trục tọa độ (độ phân giải 2 độ cho mượt)
+    for (let p = 0; p <= 360; p += 2) phi_vals.push(p);
+    for (let t = 0; t <= 90; t += 2) theta_vals.push(t); // Góc tà từ 0 đến 90 độ (quét bán cầu trên)
+
+    // Tính toán ma trận Array Factor (dB)
+    for (let t of theta_vals) {
+        let z_row = [];
+        let thetaRad = (t * Math.PI) / 180;
+        
+        for (let p of phi_vals) {
+            let phiRad = (p * Math.PI) / 180;
+            
+            let psi_x = 2 * Math.PI * dx * Math.sin(thetaRad) * Math.cos(phiRad) + betaXRad;
+            let psi_y = 2 * Math.PI * dy * Math.sin(thetaRad) * Math.sin(phiRad) + betaYRad;
+
+            let af_x = (Math.abs(Math.sin(psi_x / 2)) < 1e-9) ? 1 : Math.abs(Math.sin((Nx * psi_x) / 2) / (Nx * Math.sin(psi_x / 2)));
+            let af_y = (Math.abs(Math.sin(psi_y / 2)) < 1e-9) ? 1 : Math.abs(Math.sin((Ny * psi_y) / 2) / (Ny * Math.sin(psi_y / 2)));
+
+            let af_total = af_x * af_y;
+            let af_db = 20 * Math.log10(af_total);
+            if (af_db < -40) af_db = -40; // Giới hạn sàn -40dB
+            
+            z_row.push(af_db);
+        }
+        z_vals.push(z_row);
+    }
+
+    const data = [{
+        z: z_vals,
+        x: phi_vals,
+        y: theta_vals,
+        type: 'contour',
+        colorscale: 'Jet',
+        contours: {
+            start: -40,
+            end: 0,
+            size: 5 // Cứ cách 5dB vẽ một đường viền
+        },
+        colorbar: { title: 'AF (dB)' }
+    }];
+
+    const layout = {
+        title: { text: 'Bản đồ Contour 2D (Mặt phẳng XY)', font: { size: 15 } },
+        xaxis: { title: 'Góc phương vị Phi (Độ)', dtick: 45 },
+        yaxis: { title: 'Góc tà Theta (Độ)', dtick: 15 },
+        margin: { l: 60, r: 20, b: 50, t: 40 }
+    };
+
+    Plotly.newPlot('plotPlanar2D', data, layout);
+}
+
+// --- THUẬT TOÁN TÌM HPBW VÀ FNBW (BẢN TRUYỀN BIẾN TRỰC TIẾP) ---
+function extractBeamwidths(N, d_lambda, betaRad) {
+    // Bọc bảo hiểm: Nếu thiếu dữ liệu thì nhả ra dấu gạch ngang
+    if (!N || !d_lambda || isNaN(betaRad)) return { hpbw: "-", fnbw: "-" };
+
+    let data = [];
+    for(let t = 0; t <= 180; t += 0.1) {
+        let th = t * Math.PI / 180;
+        let psi = 2 * Math.PI * d_lambda * Math.cos(th) + betaRad;
+        let af = (Math.abs(Math.sin(psi / 2)) < 1e-9) ? 1 : Math.abs(Math.sin(N * psi / 2) / (N * Math.sin(psi / 2)));
+        let db = 20 * Math.log10(af);
+        
+        if (!isFinite(db) || isNaN(db)) db = -200; 
+        data.push({t: t, db: db});
+    }
+
+    let maxDb = -Infinity;
+    let peakIndex = 0;
+    for(let i = 0; i < data.length; i++) {
+        if(data[i].db > maxDb) { maxDb = data[i].db; peakIndex = i; }
+    }
+
+    let left3dB = 0, right3dB = 180;
+    for(let i = peakIndex; i >= 0; i--) { if(data[i].db <= maxDb - 3) { left3dB = data[i].t; break; } }
+    for(let i = peakIndex; i < data.length; i++) { if(data[i].db <= maxDb - 3) { right3dB = data[i].t; break; } }
+    
+    let leftNull = 0, rightNull = 180;
+    for(let i = peakIndex - 1; i >= 0; i--) { if(data[i].db > data[i+1].db) { leftNull = data[i+1].t; break; } }
+    for(let i = peakIndex + 1; i < data.length - 1; i++) { if(data[i].db > data[i-1].db) { rightNull = data[i-1].t; break; } }
+
+    return {
+        hpbw: (right3dB - left3dB).toFixed(2),
+        fnbw: (rightNull - leftNull).toFixed(2)
+    };
+}
+
+window.onload = function() {
+    calculateAF();  // Tính và vẽ Tab 2 
+    calculatePlanarAF(); // Planar
+};
