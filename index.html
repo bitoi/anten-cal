@@ -15,7 +15,7 @@
     <div    class="container">
     <header class="navbar">
         <div class="title-container">
-            <h1>CÔNG CỤ TÍNH TOÁN ARRAY FACTOR</h1>
+            <h1>ARRAY FACTOR CALCULATOR TOOL</h1>
         </div>
         <div class="logo">
             <img src="icon.png" alt="Logo HUST">
@@ -26,64 +26,71 @@
         <div id="tab2" class="tab-content active">
 <!-- giới thiệu tab 2 -->
             <div class="tool-intro">
-                <p style="color: #666; font-size: 20px;">Khảo sát đặc đồ bức xạ không gian của các mảng anten quy mô lớn. Tùy chọn mô hình linear hoặc planar.</p>
+                <p style="color: #666; font-size: 20px;">Analyze the spatial radiation pattern of large-scale antenna arrays. Choose between linear or planar models.</p>
             </div>
 
 <!-- sub tabs -->
             <div class="sub-tab-menu">
-                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Mảng Tuyến Tính (Linear)</button>
-                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Mảng Phẳng (Planar)</button>
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Linear Array</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Planar Array</button>
             </div>
 
 <!-- tab linear-->
             <div id="sub-linear" class="sub-tab-content active">
 <!-- Lý thuyết-->
                 <div class="theory-box">
-                <h4> Mảng Anten Tuyến Tính Đều (Uniform Linear Array - ULA) </h4>
-                <p>Mảng ULA gồm N phần tử xếp thành một hàng dọc (thường đặt theo trục Z), cách đều nhau khoảng d. Độ lớn Array Factor (AF) chuẩn hóa được tính bằng:</p>
+                <h4> Uniform Linear Array - ULA </h4>b
+                <p>A ULA consists of N elements arranged in a straight line (usually along the Z-axis), equally spaced by a distance d.</p>
+                <p>The normalized Array Factor (AF) magnitude is calculated as:</p>
                     
                     $$ |AF| = \left| \frac{\sin\left(\frac{N\psi}{2}\right)}{N\sin\left(\frac{\psi}{2}\right)} \right| $$
                     
-                    <p>Trong đó, Ψ là tổng độ lệch pha giữa hai phần tử liên tiếp, phụ thuộc vào góc quan sát θ và góc kích thích pha điện tử α (dùng để bẻ tia - Beam steering):</p>
+                    <p>Where Ψ is the total phase difference between two consecutive elements, depending on the observation angle θ and the electrical phase excitation α (used for beam steering):</p>
                     
                     $$ \psi = \frac{2\pi}{\lambda} d \cos(\theta) + \alpha $$
-                    
+                
+                <p> The directivity D:</p>
+                    $$ D = \frac{4\pi}{\int_0^{2\pi} \int_0^\pi |AF(\theta)|^2 \sin(\theta) d\theta d\phi} $$
+
+                <p>For a ULA, the half-power beamwidth (HPBW) and first null beamwidth (FNBW) can be approximated based on the number of elements N and the element spacing d:</p>
+                    $$ HPBW \approx \frac{102}{N \cdot d/\lambda} \text{ (degrees)} $$
+                    $$ FNBW \approx \frac{180}{N \cdot d/\lambda} \text{ (degrees)} $$
 
                     <img class="theory-img" src="linear.png" alt="Minh họa">
                 </div>
 
 <!-- Nhập số liệu -->
                 <div class="calculator-box array-calc">
-                    <h3>Thông số Mảng Anten 1 chiều (ULA)</h3>
+                    <h3>Parameters</h3>
                     <div class="input-grid">
                         <div class="input-group">
-                            <label>Số phần tử N:</label>
+                            <label>Number of Elements N:</label>
                             <input type="number" id="numN" value="4" min="2">
                         </div>
                         <div class="input-group">
-                            <label>Khoảng cách d (\(λ\)):</label>
+                            <label>Element Spacing d (\(λ\)):</label>
                             <input type="number" id="distD" value="0.5" step="0.1">
                         </div>
                         <div class="input-group">
-                            <label>Góc lệch pha α (độ):</label>
+                            <label>Phase Shift α (degrees):</label>
                             <input type="number" id="phaseAlpha" value="0">
                         </div>
                         <div class="input-group">
-                            <label>Góc quan sát θ (độ):</label>
+                            <label>Observation Angle θ (degrees):</label>
                             <input type="number" id="thetaDeg" value="90" min="0" max="180">
                         </div>
                     </div>
 <!-- Button -->
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="calc-btn btn-array" onclick="calculateAF()">Tính toán và vẽ đồ thị</button>
-                        <button class="calc-btn btn-export" onclick="exportCSV()">Xuất dữ liệu (CSV)</button>
+                        <button class="calc-btn btn-array" onclick="calculateAF()">Calculate and Plot Graph</button>
+                        <button class="calc-btn btn-export" onclick="exportCSV()">Export Data (CSV)</button>
                     </div>
 <!-- Trả kết quả -->
                     <div class="result-area" style="margin-top: 20px;">
-                        <p>Giá trị Array Factor chuẩn hóa tại θ = <span id="displayTheta">90</span>°: <strong id="afResult">-</strong></p>
-                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Hệ số hướng tính (Directivity): <strong id="ulaDirectivity">-</strong></p>
-                        <p style="color: #e67e22; margin-top: 8px;">Độ rộng búp sóng nửa công suất (HPBW): <strong id="ulaHPBW">-</strong></p>
-                        <p style="color: #c0392b; margin-top: 5px;">Độ rộng búp sóng giữa 2 điểm không (FNBW): <strong id="ulaFNBW">-</strong></p>
+                        <p>Normalized Array Factor value at θ = <span id="displayTheta">90</span>°: <strong id="afResult">-</strong></p>
+                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Directivity (D): <strong id="ulaDirectivity">-</strong></p>
+                        <p style="color: #e67e22; margin-top: 8px;">Half-Power Beamwidth (HPBW): <strong id="ulaHPBW">-</strong></p>
+                        <p style="color: #c0392b; margin-top: 5px;">First Null Beamwidth (FNBW): <strong id="ulaFNBW">-</strong></p>
                     </div>
                     <div class="charts-container" style="margin-top: 20px;">
                             <div id="plotCartesian" style="width: 100%; height: 500px; margin-bottom: 40px; border: 1px solid #eee; border-radius: 8px;"></div>
@@ -98,13 +105,13 @@
             <div id="sub-planar" class="sub-tab-content">
 <!-- Lý thuyết -->
                 <div class="theory-box">
-                    <h4> Mảng Anten Phẳng Đều (Uniform Planar Array - UPA)</h4>
-                    <p>Mảng UPA là sự kết hợp của hai mảng tuyến tính đặt vuông góc với nhau trên mặt phẳng X-Y (tạo thành ma trận \(N_x\) x \(N_y\)). Array Factor tổng hợp chính là tích của hai AF thành phần dọc theo trục X và trục Y:</p>
-                    
+                    <h4> Uniform Planar Array (UPA)</h4>
+                    <p>UPA is the combination of two uniform linear arrays placed perpendicular to each other on the X-Y plane (forming an \(N_x\) x \(N_y\) matrix). The total Array Factor is the product of the two component AFs along the X and Y axes:</p>
+
                     $$ |AF_{UPA}| = |AF_x| \times |AF_y| $$
-                    
-                    <p>Vì mảng nằm trên mặt phẳng X-Y, hướng bức xạ cực đại tự nhiên (Broadside) sẽ hướng thẳng đứng theo trục Z. Độ lệch pha thành phần dọc theo mỗi trục phụ thuộc vào cả góc tà θ và góc phương vị ϕ:</p>
-                    
+
+                    <p>Since the array is located on the X-Y plane, the natural maximum radiation direction (Broadside) will be directed vertically along the Z-axis. The phase difference component along each axis depends on both the tilt angle θ and the azimuth angle ϕ:</p>
+
                     $$ \psi_x = \frac{2\pi}{\lambda} d_x \sin(\theta)\cos(\phi) + \beta_x $$
                     $$ \psi_y = \frac{2\pi}{\lambda} d_y \sin(\theta)\sin(\phi) + \beta_y $$
 
@@ -113,57 +120,57 @@
 
 <!-- Nhập số liệu -->
                 <div class="calculator-box array-calc">
-                    <h3>Thông số Mảng Anten Phẳng (UPA - Lưới \(N_x\) x \(N_y\))</h3>
+                    <h3>Parameters (UPA - \(N_x\) x \(N_y\) Grid)</h3>
                     <div class="input-grid">
                         <div class="input-group">
-                            <label>Số phần tử trục X (\(N_x\)):</label>
+                            <label>Number of elements along X-axis (\(N_x\)):</label>
                             <input type="number" id="numNx" value="8" min="2">
                         </div>
                         <div class="input-group">
-                            <label>Số phần tử trục Y (\(N_y\)):</label>
+                            <label>Number of elements along Y-axis (\(N_y\)):</label>
                             <input type="number" id="numNy" value="8" min="2">
                         </div>
                         <div class="input-group">
-                            <label>Khoảng cách \(d_x\) (\(λ\)):</label>
+                            <label>Spacing \(d_x\) (\(λ\)):</label>
                             <input type="number" id="distDx" value="0.5">
                         </div>
                         <div class="input-group">
-                            <label>Khoảng cách \(d_y\) (\(λ\)):</label>
+                            <label>Spacing \(d_y\) (\(λ\)):</label>
                             <input type="number" id="distDy" value="0.5">
                         </div>
                         <div class="input-group">
-                            <label>Kích thích pha \(β_x\) (độ):</label>
+                            <label>Excitation phase \(β_x\) (degrees):</label>
                             <input type="number" id="betaX" value="0">
                         </div>
                         <div class="input-group">
-                            <label>Kích thích pha \(β_y\) (độ):</label>
+                            <label>Excitation phase \(β_y\) (degrees):</label>
                             <input type="number" id="betaY" value="0">
                         </div>
                         <div class="input-group">
-                            <label>Góc quan sát tà θ (độ):</label>
+                            <label>Tilt angle θ (degrees):</label>
                             <input type="number" id="thetaPlanar" value="0" min="0" max="180">
                         </div>
                         <div class="input-group">
-                            <label>Góc phương vị ϕ (độ):</label>
+                            <label>Azimuth angle ϕ (degrees):</label>
                             <input type="number" id="phiPlanar" value="0" min="0" max="360">
                         </div>
                     </div>
 <!-- Button -->
                     <div style="display: flex; gap: 10px; margin-top: 15px;"></div>                    
-                        <button class="calc-btn btn-array" onclick="calculatePlanarAF()">Tính toán và vẽ đồ thị</button>
+                        <button class="calc-btn btn-array" onclick="calculatePlanarAF()">Calculate and Plot</button>
                     </div>
 <!-- Đồ thị -->
                     <div class="result-area" style="margin-top: 20px;">
-                        <p>Giá trị AF chuẩn hóa tại (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°): <strong id="afPlanarResult" style="color: #BF1E2D;">-</strong></p>
-                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Hệ số hướng tính (Directivity cực đại): <strong id="upaDirectivity">-</strong></p>
+                        <p>Normalized Array Factor at  (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°): <strong id="afPlanarResult" style="color: #BF1E2D;">-</strong></p>
+                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Directivity: <strong id="upaDirectivity">-</strong></p>
                         <div style="display: flex; gap: 40px; margin-top: 10px; font-size: 14px;">
                             <div>
-                                <strong style="color: #27ae60;">Mặt phẳng X-Z (Phi = 0°):</strong>
+                                <strong style="color: #27ae60;">X-Z Plane (Phi = 0°):</strong>
                                 <p style="margin: 5px 0;">HPBW_x ~ <strong id="upaHPBWx">-</strong></p>
                                 <p style="margin: 5px 0;">FNBW_x ~ <strong id="upaFNBWx">-</strong></p>
                             </div>
                             <div>
-                                <strong style="color: #8e44ad;">Mặt phẳng Y-Z (Phi = 90°):</strong>
+                                <strong style="color: #8e44ad;">Y-Z Plane (Phi = 90°):</strong>
                                 <p style="margin: 5px 0;">HPBW_y ~ <strong id="upaHPBWy">-</strong></p>
                                 <p style="margin: 5px 0;">FNBW_y ~ <strong id="upaFNBWy">-</strong></p>
                             </div>
@@ -183,10 +190,10 @@
 <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-content">
-            <p>&copy; 2026 HUST Calculator. Phát triển bởi <strong>Nguyễn Minh Quân</strong> - MSSV: 20233596.</p>
-            <p class="footer-subtext">Khoa Điện tử Viễn thông - Đại học Bách Khoa Hà Nội</p>
+            <p>&copy; 2026 Array Factor Calculator. Developed by <strong>Nguyễn Minh Quân</strong> - MSSV: 20233596.</p>
+            <p class="footer-subtext">Electronics and Telecommunications - Hanoi University of Science and Technology</p>
             <div class="footer-links">
-                <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank"> Báo cáo đồ án</a> | 
+                <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank"> Report</a> | 
                 <a href="https://github.com/bitoi/anten-cal" target="_blank"> GitHub Repository</a>
             </div>
         </div>
