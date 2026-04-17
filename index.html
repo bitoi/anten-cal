@@ -1,205 +1,261 @@
-<!-- Khai báo -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUST CALCULATOR</title>
+    <title>HUST ARRAY FACTOR CALCULATOR</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script> <!-- Thư viện vẽ đồ thị Plotly -->
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!-- Thư viện MathJax cho công thức toán học -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-
-<!-- Header trên đầu -->
 <body>
-    <div    class="container">
-    <header class="navbar">
-        <div class="title-container">
-            <h1>ARRAY FACTOR CALCULATOR TOOL</h1>
-        </div>
-        <div class="logo">
-            <img src="icon.png" alt="Logo HUST">
-        </div>
-    </header>
+    <div class="container">
+        <header class="navbar">
+            <div class="title-container">
+                <h1>ARRAY FACTOR CALCULATOR TOOL</h1>
+            </div>
+            <div class="logo">
+                <img src="icon.png" alt="Logo HUST">
+            </div>
+        </header>
 
-<!-- tab 2 -->
         <div id="tab2" class="tab-content active">
-<!-- giới thiệu tab 2 -->
             <div class="tool-intro">
-                <p style="color: #666; font-size: 20px;">Analyze the spatial radiation pattern of large-scale antenna arrays. Choose between linear or planar models.</p>
+                <p style="color: #666; font-size: 20px; text-align: center;">Simulate the Spatial Radiation Pattern of Antenna Arrays (Array Factor)</p>
             </div>
 
-<!-- sub tabs -->
             <div class="sub-tab-menu">
-                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Linear Array</button>
-                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Planar Array</button>
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-linear')">Linear Array (ULA)</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-planar')">Planar Array (UPA)</button>
             </div>
-
-<!-- tab linear-->
-            <div id="sub-linear" class="sub-tab-content active">
-<!-- Lý thuyết-->
-                <div class="theory-box">
-                <h4> Uniform Linear Array - ULA </h4>b
-                <p>A ULA consists of N elements arranged in a straight line (usually along the Z-axis), equally spaced by a distance d.</p>
-                <p>The normalized Array Factor (AF) magnitude is calculated as:</p>
-                    
-                    $$ |AF| = \left| \frac{\sin\left(\frac{N\psi}{2}\right)}{N\sin\left(\frac{\psi}{2}\right)} \right| $$
-                    
-                    <p>Where Ψ is the total phase difference between two consecutive elements, depending on the observation angle θ and the electrical phase excitation α (used for beam steering):</p>
-                    
-                    $$ \psi = \frac{2\pi}{\lambda} d \cos(\theta) + \alpha $$
-                
-                <p> The directivity D:</p>
+<div id="sub-linear" class="sub-tab-content active">
+<div class="theory-box">
+    <h4 style="margin-top: 0; color: var(--red); font-size: 18px;">Uniform Linear Array (ULA) Theory</h4>
+    <p>A Uniform Linear Array (ULA) consists of <strong>N</strong> identical elements arranged along a straight line (usually the Z-axis), with equal spacing <strong>d</strong>.</p>
+    
+    <p><strong>1. Array Factor (AF):</strong> The normalized AF magnitude is given by:</p>
+    $$ |AF| = \left| \frac{\sin\left(\frac{N\psi}{2}\right)}{N\sin\left(\frac{\psi}{2}\right)} \right| $$
+    <p>Where \(\psi\) is the total phase difference between adjacent elements:</p>
+    $$ \psi = k \cdot d \cos(\theta) + \beta \quad \left( \text{with wave number } k = \frac{2\pi}{\lambda} \right) $$
+    
+    <p><strong>2. Beam Steering:</strong> To steer the main beam to a desired angle \(\theta_0\), the required excitation phase \(\beta\) is calculated automatically:</p>
+    $$ \beta = -k \cdot d \cos(\theta_0) $$
+    
+    <p><strong>3. Pattern Multiplication Principle:</strong> The total radiation pattern depends on both the array geometry and the individual antenna element type:</p>
+    $$ E_{\text{total}}(\theta, \phi) = AF(\theta, \phi) \times EF(\theta, \phi) $$
+    
+    <p><strong>4. The directivity D:</strong> The directivity of the array can be calculated as:</p>
                     $$ D = \frac{4\pi}{\int_0^{2\pi} \int_0^\pi |AF(\theta)|^2 \sin(\theta) d\theta d\phi} $$
-
-                <p>For a ULA, the half-power beamwidth (HPBW) and first null beamwidth (FNBW) can be approximated based on the number of elements N and the element spacing d:</p>
+    <p><strong>5. Beamwidths:</strong> For a ULA, the half-power beamwidth (HPBW) and first null beamwidth (FNBW) can be approximated based on the number of elements N and the element spacing d:</p>
                     $$ HPBW \approx \frac{102}{N \cdot d/\lambda} \text{ (degrees)} $$
                     $$ FNBW \approx \frac{180}{N \cdot d/\lambda} \text{ (degrees)} $$
+    <img class="theory-img" src="linear.png" alt="Minh họa"style="display: block; margin: 20px auto; max-width: 80%;">
+</div>
 
-                    <img class="theory-img" src="linear.png" alt="Minh họa">
-                </div>
-
-<!-- Nhập số liệu -->
                 <div class="calculator-box array-calc">
-                    <h3>Parameters</h3>
+                    <h3>Linear Array Parameters</h3>
+                    
+                    <div class="input-grid" style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <div class="input-group">
+                            <label>Antenna Element Type (Element Factor):</label>
+                            <select id="elementType" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="isotropic">Isotropic (Ideal)</option>
+                                <option value="hertzian">Short Dipole (Hertzian / L < λ/10)</option>
+                                <option value="dipole_half" selected>Half-wave Dipole (λ/2)</option>
+                                <option value="dipole_full">Full-wave Dipole (λ)</option>
+                                <option value="loop_small">Small Loop Antenna</option>
+                                <option value="patch">Ideal Microstrip (Patch Antenna)</option>
+                                <option value="horn_ideal">Highly Directive (Ideal Horn)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Main Beam Steering Angle θ0 (Degrees):</label>
+                            <input type="number" id="theta0Deg" value="90" min="0" max="180">
+                            <small style="color: #c0392b; margin-top: 5px;">*Excitation phase angle α is calculated automatically</small>
+                        </div>
+                    </div>
+
                     <div class="input-grid">
                         <div class="input-group">
-                            <label>Number of Elements N:</label>
+                            <label>Number of Elements (N):</label>
                             <input type="number" id="numN" value="4" min="2">
                         </div>
                         <div class="input-group">
-                            <label>Element Spacing d (\(λ\)):</label>
+                            <label>Distance Input Mode:</label>
+                            <select id="distMode" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleDistMode()">
+                                <option value="lambda">By Wavelength (λ)</option>
+                                <option value="physical">Physical (Frequency & Actual Size)</option>
+                            </select>
+                        </div>
+                        <div class="input-group" id="modeLambda">
+                            <label>Element Spacing d (λ):</label>
                             <input type="number" id="distD" value="0.5" step="0.1">
                         </div>
-                        <div class="input-group">
-                            <label>Phase Shift α (degrees):</label>
-                            <input type="number" id="phaseAlpha" value="0">
+                        <div class="input-group" id="modePhysical" style="display: none; gap: 5px;">
+                            <label>Frequency (MHz) & Spacing (cm):</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="freqMHz" value="2400" placeholder="MHz" style="width: 50%;">
+                                <input type="number" id="distCM" value="6.25" placeholder="cm" style="width: 50%;">
+                            </div>
                         </div>
                         <div class="input-group">
-                            <label>Observation Angle θ (degrees):</label>
+                            <label>Observation Angle θ (Degrees):</label>
                             <input type="number" id="thetaDeg" value="90" min="0" max="180">
                         </div>
                     </div>
-<!-- Button -->
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="calc-btn btn-array" onclick="calculateAF()">Calculate and Plot Graph</button>
-                        <button class="calc-btn btn-export" onclick="exportCSV()">Export Data (CSV)</button>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="calc-btn btn-array" onclick="calculateAF()">Calculate & Plot Graph</button>
+                        <button class="calc-btn btn-export" onclick="exportCSV()">Export CSV Data</button>
                     </div>
-<!-- Trả kết quả -->
-                    <div class="result-area" style="margin-top: 20px;">
-                        <p>Normalized Array Factor value at θ = <span id="displayTheta">90</span>°: <strong id="afResult">-</strong></p>
+
+                    <div class="result-area">
+                        <p>Normalized total factor at θ = <span id="displayTheta">90</span>°: <strong id="afResult">-</strong></p>
+                        <p style="color: #8e44ad; margin-top: 8px;">Automatic excitation phase angle (α): <strong id="ulaAlpha">-</strong></p>
                         <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Directivity (D): <strong id="ulaDirectivity">-</strong></p>
                         <p style="color: #e67e22; margin-top: 8px;">Half-Power Beamwidth (HPBW): <strong id="ulaHPBW">-</strong></p>
                         <p style="color: #c0392b; margin-top: 5px;">First Null Beamwidth (FNBW): <strong id="ulaFNBW">-</strong></p>
+                        <p style="color: #27ae60; margin-top: 5px;">Maximum Sidelobe Level (SLL): <strong id="ulaSLL">-</strong></p>
                     </div>
-                    <div class="charts-container" style="margin-top: 20px;">
-                            <div id="plotCartesian" style="width: 100%; height: 500px; margin-bottom: 40px; border: 1px solid #eee; border-radius: 8px;"></div>
-                            <div id="plot2d" style="width: 100%; height: 400px; margin-bottom: 20px;"></div>
-                            <div id="plot3d" style="width: 100%; height: 500px;"></div>
+
+                    <div class="charts-container" style="margin-top: 30px;">
+                        <div id="plotCartesian" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
+                        <div id="plot2d" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
+                        <div id="plot3d" style="width: 100%; height: 550px;"></div>
                     </div>
-<!-- Đồ thị -->
                 </div>
             </div>
 
-<!-- TAB PLANAR -->
-            <div id="sub-planar" class="sub-tab-content">
-<!-- Lý thuyết -->
+<div id="sub-planar" class="sub-tab-content">
                 <div class="theory-box">
-                    <h4> Uniform Planar Array (UPA)</h4>
-                    <p>UPA is the combination of two uniform linear arrays placed perpendicular to each other on the X-Y plane (forming an \(N_x\) x \(N_y\) matrix). The total Array Factor is the product of the two component AFs along the X and Y axes:</p>
+    <h4 style="margin-top: 0; color: var(--red); font-size: 18px;">Uniform Planar Array (UPA) Theory</h4>
+    <p>A planar array extends the linear concept into two dimensions (X-Y plane), providing the ability to steer the beam in 3D space (both elevation \(\theta\) and azimuth \(\phi\)).</p>
+    
+    <p><strong>1. Total Array Factor:</strong> Formed by multiplying the Array Factors of two orthogonal linear arrays:</p>
+    $$ |AF_{UPA}| = |AF_x| \times |AF_y| = \left| \frac{\sin\left(\frac{N_x \psi_x}{2}\right)}{N_x\sin\left(\frac{\psi_x}{2}\right)} \right| \times \left| \frac{\sin\left(\frac{N_y \psi_y}{2}\right)}{N_y\sin\left(\frac{\psi_y}{2}\right)} \right| $$
+    
+    <p><strong>2. Spatial Phase Components (\(\psi_x, \psi_y\)):</strong></p>
+    $$ \psi_x = k \cdot d_x \sin(\theta)\cos(\phi) + \beta_x $$
+    $$ \psi_y = k \cdot d_y \sin(\theta)\sin(\phi) + \beta_y $$
+    
+    <p><strong>3. 3D Beam Steering:</strong> To aim the main beam at target coordinates \((\theta_0, \phi_0)\), the system computes the required phase shifts for both axes:</p>
+    $$ \beta_x = -k \cdot d_x \sin(\theta_0)\cos(\phi_0) \quad ; \quad \beta_y = -k \cdot d_y \sin(\theta_0)\sin(\phi_0) $$
+    
+    <p><strong>4. Directivity Approximation:</strong> For a large planar array without grating lobes:</p>
+    $$ D \approx 4\pi \left( N_x \frac{d_x}{\lambda} \right) \left( N_y \frac{d_y}{\lambda} \right) $$
+    <img class="theory-img" src="png.jpg" alt="Minh họa"style="display: block; margin: 20px auto; max-width: 80%;">
+</div>
 
-                    $$ |AF_{UPA}| = |AF_x| \times |AF_y| $$
-
-                    <p>Since the array is located on the X-Y plane, the natural maximum radiation direction (Broadside) will be directed vertically along the Z-axis. The phase difference component along each axis depends on both the tilt angle θ and the azimuth angle ϕ:</p>
-
-                    $$ \psi_x = \frac{2\pi}{\lambda} d_x \sin(\theta)\cos(\phi) + \beta_x $$
-                    $$ \psi_y = \frac{2\pi}{\lambda} d_y \sin(\theta)\sin(\phi) + \beta_y $$
-
-                    <img class="theory-img" src="png.jpg" alt="Minh họa">
-                </div>
-
-<!-- Nhập số liệu -->
                 <div class="calculator-box array-calc">
-                    <h3>Parameters (UPA - \(N_x\) x \(N_y\) Grid)</h3>
+                    <h3>Planar Array Parameters (Nx x Ny Grid)</h3>
+                    
+                    <div class="input-grid" style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <div class="input-group">
+                            <label>Antenna Element Type (Element Factor):</label>
+                            <select id="elementTypePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                                <option value="isotropic">Isotropic (Ideal)</option>
+                                <option value="hertzian">Short Dipole (Hertzian)</option>
+                                <option value="dipole_half">Half-wave Dipole (λ/2)</option>
+                                <option value="patch" selected>Ideal Microstrip (Patch Antenna)</option>
+                                <option value="horn_ideal">Highly Directive (Ideal Horn)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Main Beam Steering Angle (θ0, ϕ0):</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="theta0Planar" value="0" min="0" max="180" placeholder="θ0" title="Theta 0" style="width: 50%;">
+                                <input type="number" id="phi0Planar" value="0" min="0" max="360" placeholder="ϕ0" title="Phi 0" style="width: 50%;">
+                            </div>
+                            <small style="color: #c0392b; margin-top: 5px;">*Excitation phase βx, βy are calculated automatically</small>
+                        </div>
+                    </div>
+
                     <div class="input-grid">
                         <div class="input-group">
-                            <label>Number of elements along X-axis (\(N_x\)):</label>
-                            <input type="number" id="numNx" value="8" min="2">
+                            <label>Number of Elements (Nx, Ny):</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="numNx" value="8" min="2" title="Nx" style="width: 50%;">
+                                <input type="number" id="numNy" value="8" min="2" title="Ny" style="width: 50%;">
+                            </div>
                         </div>
+                        
                         <div class="input-group">
-                            <label>Number of elements along Y-axis (\(N_y\)):</label>
-                            <input type="number" id="numNy" value="8" min="2">
+                            <label>Distance Input Mode:</label>
+                            <select id="distModePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleDistModePlanar()">
+                                <option value="lambda">By Wavelength (λ)</option>
+                                <option value="physical">Physical (Frequency & Actual Size)</option>
+                            </select>
                         </div>
-                        <div class="input-group">
-                            <label>Spacing \(d_x\) (\(λ\)):</label>
-                            <input type="number" id="distDx" value="0.5">
+
+                        <div class="input-group" id="modeLambdaPlanar">
+                            <label>Spacing dx, dy (λ):</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="distDx" value="0.5" step="0.1" title="dx" style="width: 50%;">
+                                <input type="number" id="distDy" value="0.5" step="0.1" title="dy" style="width: 50%;">
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <label>Spacing \(d_y\) (\(λ\)):</label>
-                            <input type="number" id="distDy" value="0.5">
+
+                        <div class="input-group" id="modePhysicalPlanar" style="display: none; gap: 5px;">
+                            <label>Freq (MHz) & Spacing dx, dy (cm):</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="number" id="freqMHzPlanar" value="2400" placeholder="MHz" style="width: 34%;">
+                                <input type="number" id="distDxCM" value="6.25" placeholder="dx cm" style="width: 33%;">
+                                <input type="number" id="distDyCM" value="6.25" placeholder="dy cm" style="width: 33%;">
+                            </div>
                         </div>
+
                         <div class="input-group">
-                            <label>Excitation phase \(β_x\) (degrees):</label>
-                            <input type="number" id="betaX" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label>Excitation phase \(β_y\) (degrees):</label>
-                            <input type="number" id="betaY" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label>Tilt angle θ (degrees):</label>
+                            <label>Observation Tilt angle θ (Degrees):</label>
                             <input type="number" id="thetaPlanar" value="0" min="0" max="180">
                         </div>
                         <div class="input-group">
-                            <label>Azimuth angle ϕ (degrees):</label>
+                            <label>Observation Azimuth angle ϕ (Degrees):</label>
                             <input type="number" id="phiPlanar" value="0" min="0" max="360">
                         </div>
                     </div>
-<!-- Button -->
-                    <div style="display: flex; gap: 10px; margin-top: 15px;"></div>                    
-                        <button class="calc-btn btn-array" onclick="calculatePlanarAF()">Calculate and Plot</button>
+
+                    <div style="margin-top: 20px;">
+                        <button class="calc-btn btn-array" style="width: 100%;" onclick="calculatePlanarAF()">Calculate & Plot 3D Graph</button>
                     </div>
-<!-- Đồ thị -->
+
                     <div class="result-area" style="margin-top: 20px;">
-                        <p>Normalized Array Factor at  (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°): <strong id="afPlanarResult" style="color: #BF1E2D;">-</strong></p>
-                        <p style="color: #2980b9; margin-top: 8px; font-size: 16px;">Directivity: <strong id="upaDirectivity">-</strong></p>
-                        <div style="display: flex; gap: 40px; margin-top: 10px; font-size: 14px;">
-                            <div>
-                                <strong style="color: #27ae60;">X-Z Plane (Phi = 0°):</strong>
-                                <p style="margin: 5px 0;">HPBW_x ~ <strong id="upaHPBWx">-</strong></p>
-                                <p style="margin: 5px 0;">FNBW_x ~ <strong id="upaFNBWx">-</strong></p>
-                            </div>
-                            <div>
+                        <p>Normalized Array Factor at (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°): <strong id="afPlanarResult" style="color: #BF1E2D;">-</strong></p>
+                        <p style="color: #8e44ad; margin-top: 8px;">Automatic excitation phase (βx, βy): <strong id="upaBeta">-</strong></p>
+                        <p style="color: #2980b9; font-size: 16px; margin-top: 10px;">Approximate Directivity (D): <strong id="upaDirectivity">-</strong></p>
+                            <div style="display: flex; gap: 40px; margin-top: 15px; font-size: 15px;">
+                                <div style="flex: 1; background: white; padding: 10px; border-radius: 5px; border-left: 3px solid #27ae60;">
+                                    <strong style="color: #27ae60;">X-Z Plane (Phi = 0°):</strong>
+                                    <p style="margin: 5px 0;">HPBWx ~ <strong id="upaHPBWx">-</strong></p>
+                                    <p style="margin: 5px 0;">FNBWx ~ <strong id="upaFNBWx">-</strong></p> 
+                                </div>
+                            <div style="flex: 1; background: white; padding: 10px; border-radius: 5px; border-left: 3px solid #8e44ad;">
                                 <strong style="color: #8e44ad;">Y-Z Plane (Phi = 90°):</strong>
-                                <p style="margin: 5px 0;">HPBW_y ~ <strong id="upaHPBWy">-</strong></p>
-                                <p style="margin: 5px 0;">FNBW_y ~ <strong id="upaFNBWy">-</strong></p>
+                                <p style="margin: 5px 0;">HPBWy ~ <strong id="upaHPBWy">-</strong></p>
+                                <p style="margin: 5px 0;">FNBWy ~ <strong id="upaFNBWy">-</strong></p>
                             </div>
-                        </div>
-                    <div class="charts-container" style="margin-top: 20px;">
-                        <div id="plotPlanar2D" style="width: 100%; height: 500px; margin-bottom: 40px; border: 1px solid #eee; border-radius: 8px;"></div>
-                        <div id="plotPlanar3D" style="width: 100%; height: 600px; border: 1px solid #eee; border-radius: 8px;"></div>
+                    </div>
+                </div>
+
+                    <div class="charts-container" style="margin-top: 30px;">
+                        <div id="plotPlanar2D" style="width: 100%; height: 500px; margin-bottom: 40px;"></div>
+                        <div id="plotPlanar3D" style="width: 100%; height: 600px;"></div>
                     </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
 
-<!-- Footer -->
     <footer class="site-footer">
-        <div class="footer-content">
-            <p>&copy; 2026 Array Factor Calculator. Developed by <strong>Nguyễn Minh Quân</strong> - MSSV: 20233596.</p>
-            <p class="footer-subtext">Electronics and Telecommunications - Hanoi University of Science and Technology</p>
-            <div class="footer-links">
-                <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank"> Report</a> | 
-                <a href="https://github.com/bitoi/anten-cal" target="_blank"> GitHub Repository</a>
-            </div>
+    <div class="footer-content">
+        <p>&copy; 2026 Array Factor Calculator. Student: <strong>Nguyễn Minh Quân</strong> - ID: 20233596.</p>
+        <p class="footer-subtext">School of Electrical and Electronic Engineering | Hanoi University of Science and Technology</p>
+        <div class="footer-links" style="margin-top: 10px;">
+            <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> Report</a> | 
+            <a href="https://github.com/bitoi/anten-cal" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> GitHub Repository</a>
         </div>
-    </footer>
+    </div>
+</footer>
 
-<!-- Script -->
     <script src="script.js"></script>
 </body>
 </html>
