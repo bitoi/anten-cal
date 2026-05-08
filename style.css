@@ -190,37 +190,42 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
-/* --- CẬP NHẬT STYLE CHO THẺ KẾT QUẢ CHÍNH --- */
 .highlight-card {
-    background-color: #f8f9fa; /* Màu nền xám nhạt đồng bộ */
-    border-left: 6px solid var(--red); /* Viền đỏ dày hơn một chút để tạo sự ưu tiên */
-    color: var(--dark); /* Chuyển chữ về màu tối để dễ đọc */
-    padding: 20px;
-    border-radius: 8px;
+    background-color: #ffffff; /* Chuyển từ xám nhạt sang trắng hoàn toàn */
+    border: 1px solid #ebebeb; /* Viền mỏng 4 cạnh đồng bộ với các thẻ con */
+    border-left: none;         /* Xóa bỏ vệt đỏ dày bên trái */
+    color: var(--dark);
+    padding: 30px;             /* Tăng padding để kết quả chính trông thoáng đãng, sang trọng hơn */
+    border-radius: 12px;       /* Bo góc mềm mại */
     text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
-    transition: transform 0.2s;
+    margin-bottom: 25px;
+    /* Đổ bóng nhẹ nhưng sâu hơn các thẻ phụ một chút để tạo chiều sâu */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
+    transition: all 0.3s ease;
 }
 
 .highlight-card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border-color: #d1d1d1;
 }
 
-/* Điều chỉnh lại màu chữ bên trong thẻ chính */
+/* Tinh chỉnh nhãn bên trong thẻ chính */
 .highlight-card .metric-label {
-    color: #666; /* Màu nhãn xám trung tính */
-    font-size: 15px;
+    color: #999; 
+    font-size: 13px;
     font-weight: 600;
-    text-transform: none; /* Bỏ in hoa toàn bộ để trông thanh thoát hơn */
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
 }
 
+/* Làm nổi bật con số kết quả bằng màu đỏ thương hiệu nhưng trên nền trắng sạch sẽ */
 .highlight-card .metric-value {
-    font-size: 32px; /* Giữ nguyên kích thước lớn */
+    font-size: 36px;
     font-weight: 800;
-    color: var(--red); /* Con số kết quả quan trọng nhất sẽ hiện màu đỏ */
+    color: var(--red); 
+    display: block;
 }
 
 .metric-grid {
@@ -229,28 +234,35 @@ body {
     gap: 15px;
 }
 
+/* --- PHONG CÁCH TỐI GIẢN (MINIMALIST) CHO CÁC THẺ --- */
 .metric-card {
-    background-color: #f8f9fa;
-    border-left: 4px solid var(--card-color, #ccc);
+    background-color: #ffffff;
+    border: 1px solid #ebebeb; /* Viền xám siêu nhạt bao quanh */
     padding: 15px;
-    border-radius: 6px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 8px; /* Bo góc mềm mại hơn */
+    text-align: center; /* Căn giữa cho đồng bộ với thẻ to */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Đổ bóng mặc định cực nhẹ */
+    transition: all 0.2s ease-in-out;
+    
 }
 
 .metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    transform: translateY(-3px); /* Hiệu ứng nảy lên khi di chuột */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.06); /* Bóng đậm hơn một chút khi hover */
+    border-color: #d1d1d1;
 }
 
 .metric-card .metric-label {
-    font-size: 13px;
-    color: #666;
+    font-size: 12px;
+    color: #888; /* Chữ xám nhạt cho tiêu đề */
     font-weight: 600;
+    text-transform: uppercase; /* In hoa tiêu đề nhìn chuyên nghiệp hơn */
+    letter-spacing: 0.5px;
     margin-bottom: 8px;
 }
 
 .metric-card .metric-value {
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--dark);
 }

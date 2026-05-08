@@ -116,7 +116,7 @@ function calculateAF() {
 
     // Directivity xấp xỉ
     let directivity_linear = 2 * N * d_lambda; 
-    document.getElementById('ulaDirectivity').innerText = directivity_linear.toFixed(2) + " (times) ~ " + (10 * Math.log10(directivity_linear)).toFixed(2) + " dBi";
+    document.getElementById('ulaDirectivity').innerText = directivity_linear.toFixed(2) + " (" + (10 * Math.log10(directivity_linear)).toFixed(2) + " dBi)";
 
     // Vẽ 3 đồ thị
     drawCartesianULA(N, d_lambda, alphaRad, elementType, stats.maxVal);
@@ -198,12 +198,15 @@ function drawCartesianULA(N, d, alpha, type, maxVal) {
 
         x_vals.push(t - 90);
         y_vals.push(db);
-        afDataForExport.push({ theta: t, af: val });
+        afDataForExport.push({ theta: t, af: af, etotal: val });
     }
 
     const targetTheta = parseInt(document.getElementById('thetaDeg').value);
     if(targetTheta >= 0 && targetTheta <= 180) {
+        document.getElementById('displayThetaAF').innerText = targetTheta;
+        document.getElementById('displayThetaE').innerText = targetTheta;
         document.getElementById('afResult').innerText = afDataForExport[targetTheta].af.toFixed(4);
+        document.getElementById('eTotalResult').innerText = afDataForExport[targetTheta].etotal.toFixed(4);
     }
 
     const data = [{ x: x_vals, y: y_vals, mode: 'lines', line: { color: 'blue', width: 2 }, type: 'scatter' }];
@@ -344,10 +347,13 @@ document.getElementById('upaBeta').innerText = `βx = ${(bx * 180 / Math.PI).toF
         let af_y_target = (Math.abs(Math.sin(psi_y_target / 2)) < 1e-9) ? 1 : Math.abs(Math.sin((Ny * psi_y_target) / 2) / (Ny * Math.sin(psi_y_target / 2)));
         let ef_target = getElementFactor(targetThetaRad, type);
 
-        let af_total_target = af_x_target * af_y_target * ef_target;
+        let af_total_target = af_x_target * af_y_target; 
+        let etotal_target = af_total_target * ef_target;
         document.getElementById('afPlanarResult').innerText = af_total_target.toFixed(4);
+        document.getElementById('eTotalPlanarResult').innerText = etotal_target.toFixed(4);
     } else {
-        document.getElementById('afPlanarResult').innerText = "Angle Error";
+        document.getElementById('afPlanarResult').innerText = "Err";
+        document.getElementById('eTotalPlanarResult').innerText = "Err";
     }
 
     // Trả lại FNBW
@@ -363,8 +369,8 @@ document.getElementById('upaBeta').innerText = `βx = ${(bx * 180 / Math.PI).toF
 // 5. CÁC HÀM HỖ TRỢ
 function exportCSV() {
     if (afDataForExport.length === 0) return alert("Vui lòng Tính toán trước khi xuất CSV!");
-    let csvContent = "data:text/csv;charset=utf-8,Goc Theta (Deg),Array Factor\n";
-    afDataForExport.forEach(r => csvContent += r.theta + "," + r.af.toFixed(6) + "\n");
+    let csvContent = "data:text/csv;charset=utf-8,Goc Theta (Deg),Array Factor (AF),Total Pattern (E_total)\n";
+    afDataForExport.forEach(r => csvContent += r.theta + "," + r.af.toFixed(6) + "," + r.etotal.toFixed(6) + "\n");
     const link = document.createElement("a");
     link.href = encodeURI(csvContent);
     link.download = "Data_AF.csv";

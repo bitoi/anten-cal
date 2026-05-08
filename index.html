@@ -12,8 +12,8 @@
 
 
 <body>
-    <!-- Tiêu đề -->
     <div class="container">
+        <!-- Tiêu đề -->
         <header class="navbar">
             <div class="title-container">
                 <h1>ARRAY FACTOR CALCULATOR TOOL</h1>
@@ -24,9 +24,9 @@
         </header>
     
     <!-- Nội dung tab -->
-    <div id="tab" class="tab-content active">
+        <div id="tab" class="tab-content active">
             <div class="tool-intro">
-                <p style="color: #666; font-size: 20px; text-align: center;">Simulate the Spatial Radiation Pattern of Antenna Arrays (Array Factor)</p>
+                <p style="color: #666; font-size: 20px; text-align: center;">Calculate the Array Factor for Different Antenna Array Configurations</p>
             </div>
 
             <!-- Đổi Sub tabs -->
@@ -76,7 +76,6 @@
                                 <option value="hertzian">Short Dipole (Hertzian / L < λ/10)</option>
                                 <option value="dipole_half" selected>Half-wave Dipole (λ/2)</option>
                                 <option value="dipole_full">Full-wave Dipole (λ)</option>
-                                <option value="loop_small">Small Loop Antenna</option>
                                 <option value="patch">Ideal Microstrip (Patch Antenna)</option>
                                 <option value="horn_ideal">Highly Directive (Ideal Horn)</option>
                             </select>
@@ -93,12 +92,10 @@
                         <div class="input-group" id="steerAngleULA">
                             <label>Main Beam Steering Angle θ0 (Degrees):</label>
                             <input type="number" id="theta0Deg" value="90" min="0" max="180">
-                            <small style="color: #c0392b; margin-top: 5px;">*Excitation phase α is calculated automatically</small>
                         </div>
                         <div class="input-group" id="steerPhaseULA" style="display: none;">
                             <label>Excitation Phase α (Degrees):</label>
                             <input type="number" id="alphaDeg" value="0">
-                            <small style="color: #2980b9; margin-top: 5px;">*Manual phase injection</small>
                         </div>
 
                         <!-- Nhập số phần tử -->
@@ -145,187 +142,204 @@
 
                     <!-- Kết quả tính toán -->
                     <div class="result-dashboard">
-    <div class="metric-card highlight-card">
-        <div class="metric-label">Normalized Array Factor (θ = <span id="displayTheta">90</span>°)</div>
-        <div class="metric-value" id="afResult">-</div>
-    </div>
-
-    <div class="metric-grid">
-        <div class="metric-card" style="--card-color: #8e44ad;">
-            <div class="metric-label">Excitation Phase (α)</div>
-            <div class="metric-value" id="ulaAlpha">-</div>
-        </div>
-        <div class="metric-card" style="--card-color: #2980b9;">
-            <div class="metric-label">Directivity (D)</div>
-            <div class="metric-value" id="ulaDirectivity" style="font-size: 18px;">-</div>
-        </div>
-        <div class="metric-card" style="--card-color: #e67e22;">
-            <div class="metric-label">HPBW</div>
-            <div class="metric-value" id="ulaHPBW">-</div>
-        </div>
-        <div class="metric-card" style="--card-color: #c0392b;">
-            <div class="metric-label">FNBW</div>
-            <div class="metric-value" id="ulaFNBW">-</div>
-        </div>
-        <div class="metric-card" style="--card-color: #27ae60;">
-            <div class="metric-label">Max SLL</div>
-            <div class="metric-value" id="ulaSLL">-</div>
-        </div>
-    </div>
-</div>
-
-                    <!-- Đồ thị -->
-                    <div class="charts-container" style="margin-top: 30px;">
-                        <div id="plotCartesian" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
-                        <div id="plot2d" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
-                        <div id="plot3d" style="width: 100%; height: 550px;"></div>
+                        <div class="metric-card highlight-card" style="flex: 1; margin-bottom: 0; padding: 20px;">
+                            <div class="metric-label">Array Factor |AF| (θ = <span id="displayThetaAF">90</span>°)</div>
+                            <div class="metric-value" id="afResult">-</div>
+                        </div>
+                        <div class="metric-card highlight-card" style="flex: 1; margin-bottom: 0; padding: 20px;">
+                            <div class="metric-label">Total Pattern |E_total| (θ = <span id="displayThetaE">90</span>°)</div>
+                            <div class="metric-value" id="eTotalResult">-</div>
+                        </div>
+                        <div class="metric-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Excitation Phase (α)</div>
+                                <div class="metric-value" id="ulaAlpha">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Directivity (D)</div>
+                                <div class="metric-value" id="ulaDirectivity" style="font-size: 18px;">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">HPBW</div>
+                                <div class="metric-value" id="ulaHPBW">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">FNBW</div>
+                                <div class="metric-value" id="ulaFNBW">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Max SLL</div>
+                                <div class="metric-value" id="ulaSLL">-</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                    <!-- Đồ thị -->
+                <div class="charts-container" style="margin-top: 30px;">
+                    <div id="plotCartesian" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
+                    <div id="plot2d" style="width: 100%; height: 450px; margin-bottom: 30px;"></div>
+                    <div id="plot3d" style="width: 100%; height: 550px;"></div>
+                </div>
             </div>
+        </div>
             
             <!-- Nội dung tab planar -->
-            <div id="sub-planar" class="sub-tab-content">
-                <div class="theory-box">
-    <h4 style="margin-top: 0; color: var(--red); font-size: 18px;">Uniform Planar Array (UPA) Theory</h4>
-    <p>A planar array extends the linear concept into two dimensions (X-Y plane), providing the ability to steer the beam in 3D space (both elevation \(\theta\) and azimuth \(\phi\)).</p>
+        <div id="sub-planar" class="sub-tab-content">
+            <div class="theory-box">
+                <h4 style="margin-top: 0; color: var(--red); font-size: 18px;">Uniform Planar Array (UPA) Theory</h4>
+                <p>A planar array extends the linear concept into two dimensions (X-Y plane), providing the ability to steer the beam in 3D space (both elevation \(\theta\) and azimuth \(\phi\)).</p>
     
-    <p><strong>1. Total Array Factor:</strong> Formed by multiplying the Array Factors of two orthogonal linear arrays:</p>
-    $$ |AF_{UPA}| = |AF_x| \times |AF_y| = \left| \frac{\sin\left(\frac{N_x \psi_x}{2}\right)}{N_x\sin\left(\frac{\psi_x}{2}\right)} \right| \times \left| \frac{\sin\left(\frac{N_y \psi_y}{2}\right)}{N_y\sin\left(\frac{\psi_y}{2}\right)} \right| $$
+                <p><strong>1. Total Array Factor:</strong> Formed by multiplying the Array Factors of two orthogonal linear arrays:</p>
+                $$ |AF_{UPA}| = |AF_x| \times |AF_y| = \left| \frac{\sin\left(\frac{N_x \psi_x}{2}\right)}{N_x\sin\left(\frac{\psi_x}{2}\right)} \right| \times \left| \frac{\sin\left(\frac{N_y \psi_y}{2}\right)}{N_y\sin\left(\frac{\psi_y}{2}\right)} \right| $$
     
-    <p><strong>2. Spatial Phase Components (\(\psi_x, \psi_y\)):</strong></p>
-    $$ \psi_x = k \cdot d_x \sin(\theta)\cos(\phi) + \beta_x $$
-    $$ \psi_y = k \cdot d_y \sin(\theta)\sin(\phi) + \beta_y $$
+                <p><strong>2. Spatial Phase Components (\(\psi_x, \psi_y\)):</strong></p>
+                $$ \psi_x = k \cdot d_x \sin(\theta)\cos(\phi) + \beta_x $$
+                $$ \psi_y = k \cdot d_y \sin(\theta)\sin(\phi) + \beta_y $$
     
-    <p><strong>3. 3D Beam Steering:</strong> To aim the main beam at target coordinates \((\theta_0, \phi_0)\), the system computes the required phase shifts for both axes:</p>
-    $$ \beta_x = -k \cdot d_x \sin(\theta_0)\cos(\phi_0) \quad ; \quad \beta_y = -k \cdot d_y \sin(\theta_0)\sin(\phi_0) $$
+                <p><strong>3. 3D Beam Steering:</strong> To aim the main beam at target coordinates \((\theta_0, \phi_0)\), the system computes the required phase shifts for both axes:</p>
+                $$ \beta_x = -k \cdot d_x \sin(\theta_0)\cos(\phi_0) \quad ; \quad \beta_y = -k \cdot d_y \sin(\theta_0)\sin(\phi_0) $$
     
-    <p><strong>4. Directivity Approximation:</strong> For a large planar array without grating lobes:</p>
-    $$ D \approx 4\pi \left( N_x \frac{d_x}{\lambda} \right) \left( N_y \frac{d_y}{\lambda} \right) $$
-    <img class="theory-img" src="png.jpg" alt="Minh họa"style="display: block; margin: 20px auto; max-width: 80%;">
-</div>
+                <p><strong>4. Directivity Approximation:</strong> For a large planar array without grating lobes:</p>
+                $$ D \approx 4\pi \left( N_x \frac{d_x}{\lambda} \right) \left( N_y \frac{d_y}{\lambda} \right) $$
+                <img class="theory-img" src="png.jpg" alt="Minh họa"style="display: block; margin: 20px auto; max-width: 80%;">
+            </div>
 
-                <div class="calculator-box array-calc">
-                    <h3>Planar Array Parameters (Nx x Ny Grid)</h3>
-                    
-                    <div class="input-grid" style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
-                        <div class="input-group">
-                            <label>Antenna Element Type (Element Factor):</label>
-                            <select id="elementTypePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-                                <option value="isotropic">Isotropic (Ideal)</option>
-                                <option value="hertzian">Short Dipole (Hertzian)</option>
-                                <option value="dipole_half">Half-wave Dipole (λ/2)</option>
-                                <option value="patch" selected>Ideal Microstrip (Patch Antenna)</option>
-                                <option value="horn_ideal">Highly Directive (Ideal Horn)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>Steering Input Mode:</label>
-                            <select id="steerModeUPA" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleSteeringModeUPA()">
-                                <option value="angle">By Target Angle (θ0, ϕ0)</option>
-                                <option value="phase">By Excitation Phase (βx, βy)</option>
-                            </select>
-                        </div>
-<div class="input-group" id="steerAngleUPA">
-    <label>Main Beam Steering Angle (θ0, ϕ0):</label>
-    <div style="display: flex; gap: 10px;">
-        <input type="number" id="theta0Planar" value="0" min="0" max="180" placeholder="θ0" title="Theta 0" style="width: 50%;">
-        <input type="number" id="phi0Planar" value="0" min="0" max="360" placeholder="ϕ0" title="Phi 0" style="width: 50%;">
-    </div>
-    <small style="color: #c0392b; margin-top: 5px;">*Excitation phase βx, βy calculated automatically</small>
-</div>
-<div class="input-group" id="steerPhaseUPA" style="display: none;">
-    <label>Excitation Phase (βx, βy) in Degrees:</label>
-    <div style="display: flex; gap: 10px;">
-        <input type="number" id="betaXDeg" value="0" placeholder="βx" title="Beta X" style="width: 50%;">
-        <input type="number" id="betaYDeg" value="0" placeholder="βy" title="Beta Y" style="width: 50%;">
-    </div>
-    <small style="color: #2980b9; margin-top: 5px;">*Manual phase injection</small>
-</div>
+            <div class="calculator-box array-calc">
+                <h3>Planar Array Parameters (Nx x Ny Grid)</h3>
+                <div class="input-grid" style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                    <div class="input-group">
+                        <label>Antenna Element Type (Element Factor):</label>
+                        <select id="elementTypePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                            <option value="isotropic">Isotropic (Ideal)</option>
+                            <option value="hertzian">Short Dipole (Hertzian)</option>
+                            <option value="dipole_half">Half-wave Dipole (λ/2)</option>
+                            <option value="dipole_full">Full-wave Dipole (λ)</option>
+                            <option value="patch" selected>Ideal Microstrip (Patch Antenna)</option>
+                            <option value="horn_ideal">Highly Directive (Ideal Horn)</option>
+                        </select>
                     </div>
-
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label>Number of Elements (Nx, Ny):</label>
+                    <div class="input-group">
+                        <label>Steering Input Mode:</label>
+                        <select id="steerModeUPA" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleSteeringModeUPA()">
+                            <option value="angle">By Target Angle (θ0, ϕ0)</option>
+                            <option value="phase">By Excitation Phase (βx, βy)</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="steerAngleUPA">
+                        <label>Main Beam Steering Angle (θ0, ϕ0):</label>
                             <div style="display: flex; gap: 10px;">
-                                <input type="number" id="numNx" value="8" min="2" title="Nx" style="width: 50%;">
-                                <input type="number" id="numNy" value="8" min="2" title="Ny" style="width: 50%;">
+                                <input type="number" id="theta0Planar" value="0" min="0" max="180" placeholder="θ0" title="Theta 0" style="width: 50%;">
+                                <input type="number" id="phi0Planar" value="0" min="0" max="360" placeholder="ϕ0" title="Phi 0" style="width: 50%;">
                             </div>
+                    </div>
+                    <div class="input-group" id="steerPhaseUPA" style="display: none;">
+                        <label>Excitation Phase (βx, βy) in Degrees:</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="betaXDeg" value="0" placeholder="βx" title="Beta X" style="width: 50%;">
+                                <input type="number" id="betaYDeg" value="0" placeholder="βy" title="Beta Y" style="width: 50%;">
+                            </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Number of Elements (Nx, Ny):</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="numNx" value="8" min="2" title="Nx" style="width: 50%;">
+                            <input type="number" id="numNy" value="8" min="2" title="Ny" style="width: 50%;">
                         </div>
+                    </div>
                         
-                        <div class="input-group">
-                            <label>Distance Input Mode:</label>
-                            <select id="distModePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleDistModePlanar()">
-                                <option value="lambda">By Wavelength (λ)</option>
-                                <option value="physical">Physical (Frequency & Actual Size)</option>
-                            </select>
-                        </div>
+                    <div class="input-group">
+                        <label>Distance Input Mode:</label>
+                        <select id="distModePlanar" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;" onchange="toggleDistModePlanar()">
+                            <option value="lambda">By Wavelength (λ)</option>
+                            <option value="physical">Physical (Frequency & Actual Size)</option>
+                        </select>
+                    </div>
 
-                        <div class="input-group" id="modeLambdaPlanar">
-                            <label>Spacing dx, dy (λ):</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="number" id="distDx" value="0.5" step="0.1" title="dx" style="width: 50%;">
-                                <input type="number" id="distDy" value="0.5" step="0.1" title="dy" style="width: 50%;">
-                            </div>
-                        </div>
-
-                        <div class="input-group" id="modePhysicalPlanar" style="display: none; gap: 5px;">
-                            <label>Freq (MHz) & Spacing dx, dy (cm):</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="number" id="freqMHzPlanar" value="2400" placeholder="MHz" style="width: 34%;">
-                                <input type="number" id="distDxCM" value="6.25" placeholder="dx cm" style="width: 33%;">
-                                <input type="number" id="distDyCM" value="6.25" placeholder="dy cm" style="width: 33%;">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Observation Tilt angle θ (Degrees):</label>
-                            <input type="number" id="thetaPlanar" value="0" min="0" max="180">
-                        </div>
-                        <div class="input-group">
-                            <label>Observation Azimuth angle ϕ (Degrees):</label>
-                            <input type="number" id="phiPlanar" value="0" min="0" max="360">
+                    <div class="input-group" id="modeLambdaPlanar">
+                        <label>Spacing dx, dy (λ):</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="distDx" value="0.5" step="0.1" title="dx" style="width: 50%;">
+                            <input type="number" id="distDy" value="0.5" step="0.1" title="dy" style="width: 50%;">
                         </div>
                     </div>
 
-                    <div style="margin-top: 20px;">
-                        <button class="calc-btn btn-array" style="width: 100%;" onclick="calculatePlanarAF()">Calculate & Plot 3D Graph</button>
+                    <div class="input-group" id="modePhysicalPlanar" style="display: none; gap: 5px;">
+                        <label>Freq (MHz) & Spacing dx, dy (cm):</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="number" id="freqMHzPlanar" value="2400" placeholder="MHz" style="width: 34%;">
+                            <input type="number" id="distDxCM" value="6.25" placeholder="dx cm" style="width: 33%;">
+                            <input type="number" id="distDyCM" value="6.25" placeholder="dy cm" style="width: 33%;">
+                        </div>
                     </div>
 
-                    <div class="result-dashboard">
-    <div class="metric-card highlight-card">
-        <div class="metric-label">Normalized Array Factor (θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°)</div>
-        <div class="metric-value" id="afPlanarResult">-</div>
-    </div>
+                    <div class="input-group">
+                        <label>Observation Tilt angle θ (Degrees):</label>
+                        <input type="number" id="thetaPlanar" value="0" min="0" max="180">
+                    </div>
+                    <div class="input-group">
+                        <label>Observation Azimuth angle ϕ (Degrees):</label>
+                        <input type="number" id="phiPlanar" value="0" min="0" max="360">
+                    </div>
+                </div>
 
-    <div class="metric-grid" style="margin-bottom: 15px;">
-        <div class="metric-card" style="--card-color: #8e44ad;">
-            <div class="metric-label">Excitation Phase (βx, βy)</div>
-            <div class="metric-value" id="upaBeta" style="font-size: 18px;">-</div>
-        </div>
-        <div class="metric-card" style="--card-color: #2980b9;">
-            <div class="metric-label">Approximate Directivity (D)</div>
-            <div class="metric-value" id="upaDirectivity">-</div>
-        </div>
-    </div>
+                <div style="margin-top: 20px;">
+                    <button class="calc-btn btn-array" style="width: 100%;" onclick="calculatePlanarAF()">Calculate & Plot 3D Graph</button>
+                </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div class="metric-card" style="--card-color: #27ae60;">
-            <div class="metric-label" style="color: #27ae60; font-size: 15px;">X-Z Plane (Phi = 0°)</div>
-            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                <span>HPBWx: <strong id="upaHPBWx" class="metric-value" style="font-size: 18px;">-</strong></span>
-                <span>FNBWx: <strong id="upaFNBWx" class="metric-value" style="font-size: 18px;">-</strong></span>
-            </div>
+                <div class="result-dashboard">
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <div class="metric-card highlight-card" style="flex: 1; margin-bottom: 0; padding: 20px;">
+            <div class="metric-label">Array Factor |AF|</div>
+            <div class="metric-value" id="afPlanarResult">-</div>
         </div>
-        <div class="metric-card" style="--card-color: #8e44ad;">
-            <div class="metric-label" style="color: #8e44ad; font-size: 15px;">Y-Z Plane (Phi = 90°)</div>
-             <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                <span>HPBWy: <strong id="upaHPBWy" class="metric-value" style="font-size: 18px;">-</strong></span>
-                <span>FNBWy: <strong id="upaFNBWy" class="metric-value" style="font-size: 18px;">-</strong></span>
-            </div>
+        <div class="metric-card highlight-card" style="flex: 1; margin-bottom: 0; padding: 20px;">
+            <div class="metric-label">Total Pattern |E_total|</div>
+            <div class="metric-value" id="eTotalPlanarResult">-</div>
         </div>
     </div>
-</div>
+    <div style="text-align: center; color: #888; font-size: 13px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">
+        OBSERVATION ANGLE: θ = <span id="dispThetaPlanar">0</span>°, ϕ = <span id="dispPhiPlanar">0</span>°
+    </div>
+                    <div class="metric-grid" style="margin-bottom: 15px;">
+                        <div class="metric-card">
+                            <div class="metric-label">Excitation Phase (βx, βy)</div>
+                            <div class="metric-value" id="upaBeta" style="font-size: 18px;">-</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Approximate Directivity (D)</div>
+                            <div class="metric-value" id="upaDirectivity">-</div>
+                        </div>
+                    </div>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">X-Z Plane (Phi = 0°)</div>
+                            <div style="display: flex; justify-content: space-around; margin-top: 12px;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 11px; color: #aaa; text-transform: uppercase; margin-bottom: 4px;">HPBWx</div>
+                                    <strong id="upaHPBWx" class="metric-value" style="font-size: 22px;">-</strong>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 11px; color: #aaa; text-transform: uppercase; margin-bottom: 4px;">FNBWx</div>
+                                    <strong id="upaFNBWx" class="metric-value" style="font-size: 22px;">-</strong>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="metric-card">
+                            <div class="metric-label">Y-Z Plane (Phi = 90°)</div>
+                            <div style="display: flex; justify-content: space-around; margin-top: 12px;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 11px; color: #aaa; text-transform: uppercase; margin-bottom: 4px;">HPBWy</div>
+                                    <strong id="upaHPBWy" class="metric-value" style="font-size: 22px;">-</strong>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 11px; color: #aaa; text-transform: uppercase; margin-bottom: 4px;">FNBWy</div>
+                                    <strong id="upaFNBWy" class="metric-value" style="font-size: 22px;">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="charts-container" style="margin-top: 30px;">
                         <div id="plotPlanar2D" style="width: 100%; height: 500px; margin-bottom: 40px;"></div>
                         <div id="plotPlanar3D" style="width: 100%; height: 600px;"></div>
@@ -336,16 +350,15 @@
     </div>
 
     <footer class="site-footer">
-    <div class="footer-content">
-        <p>&copy; 2026 Array Factor Calculator. Student: <strong>Nguyễn Minh Quân</strong> - ID: 20233596.</p>
-        <p class="footer-subtext">School of Electrical and Electronic Engineering | Hanoi University of Science and Technology</p>
-        <div class="footer-links" style="margin-top: 10px;">
-            <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> Report</a> | 
-            <a href="https://github.com/bitoi/anten-cal" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> GitHub Repository</a>
+        <div class="footer-content">
+            <p>&copy; 2026 Array Factor Calculator. Student: <strong>Nguyễn Minh Quân</strong> - ID: 20233596.</p>
+            <p class="footer-subtext">School of Electrical and Electronic Engineering | Hanoi University of Science and Technology</p>
+            <div class="footer-links" style="margin-top: 10px;">
+                <a href="https://drive.google.com/drive/folders/1EOegGYYTF78Pei5EdlBEb6w_GM11NEir?usp=sharing" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> Report</a> | 
+                <a href="https://github.com/bitoi/anten-cal" target="_blank" style="color: var(--yellow); text-decoration: none; font-size: 14px; margin: 0 10px;"> GitHub Repository</a>
+            </div>
         </div>
-    </div>
-</footer>
-
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
