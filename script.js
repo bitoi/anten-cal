@@ -25,6 +25,31 @@ function toggleDistModePlanar() {
         document.getElementById('modePhysicalPlanar').style.flexDirection = 'column';
     }
 }
+// CHUYỂN ĐỔI CHẾ ĐỘ NHẬP GÓC QUÉT (LINEAR)
+function toggleSteeringModeULA() {
+    const mode = document.getElementById('steerModeULA').value;
+    if (mode === 'angle') {
+        document.getElementById('steerAngleULA').style.display = 'flex';
+        document.getElementById('steerPhaseULA').style.display = 'none';
+    } else {
+        document.getElementById('steerAngleULA').style.display = 'none';
+        document.getElementById('steerPhaseULA').style.display = 'flex';
+        document.getElementById('steerPhaseULA').style.flexDirection = 'column';
+    }
+}
+
+// CHUYỂN ĐỔI CHẾ ĐỘ NHẬP GÓC QUÉT (PLANAR)
+function toggleSteeringModeUPA() {
+    const mode = document.getElementById('steerModeUPA').value;
+    if (mode === 'angle') {
+        document.getElementById('steerAngleUPA').style.display = 'flex';
+        document.getElementById('steerPhaseUPA').style.display = 'none';
+    } else {
+        document.getElementById('steerAngleUPA').style.display = 'none';
+        document.getElementById('steerPhaseUPA').style.display = 'flex';
+        document.getElementById('steerPhaseUPA').style.flexDirection = 'column';
+    }
+}
 
 // 2. TÍNH TOÁN ĐẶC TÍNH PHẦN TỬ (ELEMENT FACTOR)
 function getElementFactor(thetaRad, type) {
@@ -67,8 +92,19 @@ function calculateAF() {
     }
 
     // Tính góc quét
-    const theta0Rad = (parseFloat(document.getElementById('theta0Deg').value) * Math.PI) / 180;
-    const alphaRad = -2 * Math.PI * d_lambda * Math.cos(theta0Rad);
+    // Tính góc quét hoặc lấy góc pha trực tiếp (MỚI)
+    let alphaRad = 0;
+    const steerMode = document.getElementById('steerModeULA').value;
+    
+    if (steerMode === 'angle') {
+        // Chế độ: Tự động tính từ góc mục tiêu
+        const theta0Rad = (parseFloat(document.getElementById('theta0Deg').value) * Math.PI) / 180;
+        alphaRad = -2 * Math.PI * d_lambda * Math.cos(theta0Rad);
+    } else {
+        // Chế độ: Người dùng nhập trực tiếp góc pha
+        alphaRad = (parseFloat(document.getElementById('alphaDeg').value) * Math.PI) / 180;
+    }
+    
     document.getElementById('ulaAlpha').innerText = (alphaRad * 180 / Math.PI).toFixed(2) + "°";
 
     // Phân tích thông số (HPBW, SLL)
@@ -234,13 +270,24 @@ function calculatePlanarAF() {
     const type = document.getElementById('elementTypePlanar').value;
 
     // --- MỚI: Tự động tính Beam Steering cho Mảng Phẳng ---
+    // --- MỚI: Xử lý Beam Steering theo Toggle (Góc hoặc Pha) ---
+let bx = 0, by = 0;
+const steerMode = document.getElementById('steerModeUPA').value;
+
+if (steerMode === 'angle') {
+    // Tự động giải phương trình từ góc mục tiêu (θ0, ϕ0)
     const theta0Rad = (parseFloat(document.getElementById('theta0Planar').value) * Math.PI) / 180;
     const phi0Rad = (parseFloat(document.getElementById('phi0Planar').value) * Math.PI) / 180;
-    
-    const bx = -2 * Math.PI * dx * Math.sin(theta0Rad) * Math.cos(phi0Rad);
-    const by = -2 * Math.PI * dy * Math.sin(theta0Rad) * Math.sin(phi0Rad);
-    
-    document.getElementById('upaBeta').innerText = `βx = ${(bx * 180 / Math.PI).toFixed(1)}°, βy = ${(by * 180 / Math.PI).toFixed(1)}°`;
+    bx = -2 * Math.PI * dx * Math.sin(theta0Rad) * Math.cos(phi0Rad);
+    by = -2 * Math.PI * dy * Math.sin(theta0Rad) * Math.sin(phi0Rad);
+} else {
+    // Lấy trực tiếp từ input góc pha (βx, βy) do người dùng nhập
+    bx = (parseFloat(document.getElementById('betaXDeg').value) * Math.PI) / 180;
+    by = (parseFloat(document.getElementById('betaYDeg').value) * Math.PI) / 180;
+}
+
+// Cập nhật hiển thị giá trị pha ra giao diện
+document.getElementById('upaBeta').innerText = `βx = ${(bx * 180 / Math.PI).toFixed(1)}°, βy = ${(by * 180 / Math.PI).toFixed(1)}°`;
 
     let x_vals = [], y_vals = [], z_vals = [];
     let contour_z = [];
